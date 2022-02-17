@@ -101,6 +101,13 @@ var options = {
         ],
         exclude: /node_modules/,
       },
+      {
+        test: "/\.mp3$/",
+        use: {
+          loader: 'file-loader',
+        },
+        exclude: /node_modules/,
+      }
     ],
   },
   resolve: {
@@ -155,6 +162,24 @@ var options = {
       patterns: [
         {
           from: 'src/assets/img/icon-34.png',
+          to: path.join(__dirname, 'build'),
+          force: true,
+        },
+      ],
+    }),
+    new CopyWebpackPlugin({
+      patterns: [
+        {
+          from: 'src/assets/audio/dash.mp3',
+          to: path.join(__dirname, 'build'),
+          force: true,
+        },
+      ],
+    }),
+    new CopyWebpackPlugin({
+      patterns: [
+        {
+          from: 'src/assets/audio/dot.mp3',
           to: path.join(__dirname, 'build'),
           force: true,
         },

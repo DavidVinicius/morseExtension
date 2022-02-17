@@ -1,3 +1,11 @@
+const dash = new Audio(chrome.runtime.getURL('dash.mp3'));
+const dot = new Audio(chrome.runtime.getURL('dot.mp3'));
+
+dash.playbackRate = 2;
+dot.playbackRate = 2;
+dot.loop = false;
+dash.loop = false;
+
 var _map = {
     'a': '.-',
     'b': '-...',
@@ -114,6 +122,27 @@ const morse = {
         }
 
         return true;
+    },
+    translate(text) {
+        if (this.isMorseCode(text)) {
+            return this.decode(text);
+        }
+
+        return this.encode(text);
+    },
+    playMorse(text) {
+        let words = text.split(/\s\s/);
+        console.log(words);
+        for (let word of words) {
+            for (let char of word) {
+                console.log(">", word, char);
+                if (char == ".") {
+                    dot.play();
+                } else if (char == "-") {
+                    dash.play();
+                }
+            }
+        }
     }
 }
 

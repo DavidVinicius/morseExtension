@@ -18,3 +18,8 @@ test('discover if text is morse code', () => {
     expect(morse.isMorseCode(".- -... -.-.")).toBe(true);
     expect(morse.isMorseCode("teste")).toBe(false);
 });
+
+test('translation of text to morse or morse to text', () => {
+    expect(morse.translate(".- -... -.-.")).toBe("abc");
+    expect(morse.translate("abc")).toBe(".- -... -.-.");
+});
