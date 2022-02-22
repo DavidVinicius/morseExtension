@@ -83,7 +83,8 @@ const _mapMorseToLetter = {
     '---..': '8',
     '----.': '9',
     '-----': '0',
-    ' ': ''
+    ' ': '',
+    '': ''
 }
 
 const morse = {
@@ -117,6 +118,7 @@ const morse = {
         for (let word of morse_words) {
             let chars = word.split(" ");
             let isMorse = chars.every((char) => char in _mapMorseToLetter);
+            console.log(chars, isMorse)
             if (isMorse === false) return false;
 
         }
@@ -133,16 +135,49 @@ const morse = {
     playMorse(text) {
         let words = text.split(/\s\s/);
         console.log(words);
+        let first = null;
+
         for (let word of words) {
-            for (let char of word) {
-                console.log(">", word, char);
-                if (char == ".") {
-                    dot.play();
-                } else if (char == "-") {
-                    dash.play();
+
+
+            for (let i = 0; i < word.length - 1; i++) {
+
+                let sound = getSound(word[i]);
+                sound.onended = () => {
+                    let sound2 = getSound(word[i + 1]);
+                    sound2.play();
+                };
+
+                if (first == null) {
+                    first = sound;
                 }
             }
         }
+
+        first.play();
+    }
+}
+
+const getSound = (dashOrDot) => {
+    if (dashOrDot == ".") {
+        const dot = new Audio(chrome.runtime.getURL('dot.mp3'));
+        dot.playbackRate = 2;
+        dot.loop = false;
+
+        return dot;
+
+    } else if (dashOrDot == "-") {
+        const dash = new Audio(chrome.runtime.getURL('dash.mp3'));
+        dash.playbackRate = 2;
+        dash.loop = false;
+
+        return dash;
+    } else {
+        const space = new Audio(chrome.runtime.getURL('space.mp3'));
+        space.playbackRate = 2;
+        space.loop = false;
+
+        return space;
     }
 }
 

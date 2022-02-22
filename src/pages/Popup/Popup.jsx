@@ -8,6 +8,16 @@ const Popup = () => {
   const [textInMorse, setTextInMorse] = useState('')
   const [showMorse, setShowMorse] = useState(false)
 
+  useEffect(() => {
+    selectedText()
+      .then((textSelected) => {
+        console.log(textSelected);
+        if (textSelected != "" && textSelected != false) {
+          setText(textSelected);
+        }
+      })
+  }, [setText]);
+
   return (
     <div className="App">
       {!showMorse &&
@@ -19,7 +29,7 @@ const Popup = () => {
             gap: 1,
           }}
           >
-            <TextField id="outlined-basic" label="texto" variant="outlined"
+            <TextField id="textInput" value={text} label="texto" variant="outlined"
               onChange={(e) => setText(e.target.value)}
             />
             <Button onClick={() => {
@@ -36,12 +46,33 @@ const Popup = () => {
           }}>Texto em morse</h4>
 
           <p style={{ color: "black", fontSize: textInMorse.length <= 20 ? "2em" : "1.5em" }}>{textInMorse.replaceAll(/\s\s/g, " | ")}</p>
-          {morse.isMorseCode(textInMorse) && <Button onClick={() => morse.playMorse(textInMorse)} variant="contained" > Play morse </Button>}
+          {
+            morse.isMorseCode(textInMorse)
+            &&
+            <Button onClick={() => morse.playMorse(textInMorse)} variant="contained" > Play morse </Button>
+          }
+
           <Button onClick={() => setShowMorse(false)} variant="contained" > GO BACK </Button>
         </Box>
       }
     </div>
   );
 };
+
+async function selectedText() {
+  const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+  let result;
+
+  try {
+    [{ result }] = await chrome.scripting.executeScript({
+      target: { tabId: tab.id },
+      function: () => getSelection().toString(),
+    });
+
+    return result
+  } catch (e) {
+    return false; // ignoring an unsupported page like chrome://extensions
+  }
+}
 
 export default Popup;
