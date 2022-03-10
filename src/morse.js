@@ -133,52 +133,37 @@ const morse = {
         return this.encode(text);
     },
     playMorse(text) {
-        let words = text.split(/\s\s/);
-        console.log(words);
-        let first = null;
 
-        for (let word of words) {
-
-
-            for (let i = 0; i < word.length - 1; i++) {
-
-                let sound = getSound(word[i]);
-                sound.onended = () => {
-                    let sound2 = getSound(word[i + 1]);
-                    sound2.play();
-                };
-
-                if (first == null) {
-                    first = sound;
-                }
-            }
+        let sounds = [];
+        for (let i = 0; i < text.length; i++) {
+            let sound = getSound(text[i]);
+            sounds.push(sound);
         }
 
-        first.play();
+        for (let i = 0; i < sounds.length - 1; i++) {
+            sounds[i].onended = () => {
+                sounds[i + 1].play();
+            };
+        }
+
+        sounds[0].play();
     }
 }
 
 const getSound = (dashOrDot) => {
+    const audio = new Audio();
+    audio.playbackRate = 3;
+    audio.loop = false;
+
     if (dashOrDot == ".") {
-        const dot = new Audio(chrome.runtime.getURL('dot.mp3'));
-        dot.playbackRate = 2;
-        dot.loop = false;
-
-        return dot;
-
+        audio.src = chrome.runtime.getURL('dot.mp3');
     } else if (dashOrDot == "-") {
-        const dash = new Audio(chrome.runtime.getURL('dash.mp3'));
-        dash.playbackRate = 2;
-        dash.loop = false;
-
-        return dash;
+        audio.src = chrome.runtime.getURL('dash.mp3');
     } else {
-        const space = new Audio(chrome.runtime.getURL('space.mp3'));
-        space.playbackRate = 2;
-        space.loop = false;
-
-        return space;
+        audio.src = chrome.runtime.getURL('space.mp3');
     }
+
+    return audio;
 }
 
 export default morse;
