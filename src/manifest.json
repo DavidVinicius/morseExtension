@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
-  "name": "Chrome Extension with React & Webpack",
-  "description": "A chrome extension boilerplate built with React 17, Webpack 5, and Webpack Dev Server 4",
+  "name": "Morse Extension",
+  "description": "A morse code translator to help you to learn morse.",
   "options_page": "options.html",
   "background": {
     "service_worker": "background.bundle.js"

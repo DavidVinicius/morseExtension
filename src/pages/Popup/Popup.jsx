@@ -29,7 +29,7 @@ const Popup = () => {
             gap: 1,
           }}
           >
-            <TextField id="textInput" value={text} label="texto" variant="outlined"
+            <TextField id="textInput" value={text} label="text" variant="outlined"
               onChange={(e) => setText(e.target.value)}
             />
             <Button onClick={() => {
@@ -43,13 +43,20 @@ const Popup = () => {
         <Box>
           <h4 style={{
             color: "black"
-          }}>Texto em morse</h4>
+          }}>Text in morse</h4>
 
           <p style={{ color: "black", fontSize: textInMorse.length <= 20 ? "2em" : "1.5em" }}>{textInMorse.replaceAll(/\s\s/g, " | ")}</p>
           {
             morse.isMorseCode(textInMorse)
             &&
-            <Button onClick={() => morse.playMorse(textInMorse)} variant="contained" > Play morse </Button>
+            <>
+              <Box m={1}>
+                <Button onClick={() => morse.playMorse(textInMorse)}
+                  variant="contained"
+                > Play morse </Button>
+              </Box>
+              <br />
+            </>
           }
 
           <Button onClick={() => setShowMorse(false)} variant="contained" > GO BACK </Button>
